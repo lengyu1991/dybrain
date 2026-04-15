@@ -1,252 +1,74 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Features from '~/components/widgets/Features.astro';
-import Features2 from '~/components/widgets/Features2.astro';
-import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
+import Steps from '~/components/widgets/Steps.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
-  title: '我的个人网站 — 文章 · 笔记 · 工具',
-  ignoreTitleTemplate: true,
+  title: 'dybrain - 个人知识平台',
 };
 ---
 
 <Layout metadata={metadata}>
   <Hero
     actions={[
-      {
-        variant: 'primary',
-        text: '开始使用',
-        href: 'https://github.com/arthelokyo/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
-      },
-      { text: '了解更多', href: '#features' },
+      { variant: 'primary', text: '进入 GitHub', href: 'https://github.com/lengyu1991', target: '_blank' }
     ]}
-    image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: '网站首页图' }}
+    image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: 'Hero Image' }}
   >
     <Fragment slot="title">
-      用 <span class="hidden xl:inline">现代技术打造</span>
-      <span class="text-accent dark:text-white">属于你的</span> 个人网站
+      欢迎来到 <span class="text-accent dark:text-white">dybrain</span>
     </Fragment>
-
     <Fragment slot="subtitle">
-      <span class="hidden sm:inline">
-        <span class="font-semibold">本站</span> 是一个集文章、笔记、工具导航于一体的个人知识平台。</span
-      >
-      <span class="block mb-1 sm:hidden font-bold text-blue-600">开箱即用，简洁高效。</span>
-      适合个人博客、知识管理、工具导航、作品集展示等多种用途。
+      这里是一个集文章、笔记、工具导航于一体的个人知识平台。
     </Fragment>
   </Hero>
 
-  <Note title="理念：" description="简洁至上、注重体验、持续更新" />
+  <Note title="核心理念" description="简洁至上、注重体验、持续更新" />
 
   <Features
-    id="features"
-    tagline="核心功能"
-    title="本站能为你提供什么"
-    subtitle="一个专注内容的个人平台，涵盖文章转载、原创笔记、实用工具与导航链接。"
+    title="本站功能"
     items={[
-      {
-        title: '文章与笔记',
-        description: '收录个人原创笔记与精选转载文章，分类清晰，方便检索与阅读。',
-        icon: 'tabler:notebook',
-      },
-      {
-        title: '工具导航',
-        description: '汇聚常用优质工具与网站链接，一站式找到你需要的资源。',
-        icon: 'tabler:tools',
-      },
-      {
-        title: '自制工具',
-        description: '持续上线自己开发的实用小工具，解决实际问题，提升效率。',
-        icon: 'tabler:device-desktop-code',
-      },
-      {
-        title: '快速加载',
-        description: '采用现代静态网站架构，页面加载极速，带来流畅的浏览体验。',
-        icon: 'tabler:rocket',
-      },
-      {
-        title: '搜索引擎优化',
-        description: '内置 SEO 优化，让你的内容更容易被搜索引擎收录，触达更多读者。',
-        icon: 'tabler:arrows-right-left',
-      },
-      {
-        title: '持续迭代更新',
-        description: '网站功能会持续扩展，后续将接入量化策略、期权数据等进阶功能。',
-        icon: 'tabler:bulb',
-      },
+      { title: '文章笔记', description: '个人原创与精选转载。', icon: 'tabler:notebook' },
+      { title: '工具导航', description: '优质工具与资源汇总。', icon: 'tabler:tools' },
+      { title: '持续迭代', description: '后续将接入量化与期权数据。', icon: 'tabler:bulb' }
     ]}
   />
 
   <Content
-    isReversed
-    tagline="关于本站"
-    title="内容驱动，功能务实"
-    items={[
-      {
-        title: '基于 Astro 5.0 构建',
-        description: '采用新一代静态站点生成器，性能卓越，开发体验友好。',
-      },
-      {
-        title: '使用 Tailwind CSS 设计',
-        description: '界面简洁美观，响应式布局，手机电脑均可完美展示。',
-      },
-      {
-        title: '跨浏览器兼容',
-        description: '无论你使用 Chrome、Safari 还是手机浏览器，都能获得一致的浏览体验。',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: '现代网站建设',
-    }}
+    title="关于内容"
+    image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: 'Content Image' }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">以现代技术为基础</h3>
-      用最合适的工具，做最实用的事
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <Content
-    isAfterContent
-    items={[
-      {
-        title: '高度可定制',
-        description: '灵活调整页面布局与视觉风格，打造专属于你的个人品牌形象。',
-      },
-      {
-        title: '多种页面布局',
-        description: '提供多样化的页面结构选择，让内容呈现更有层次感，提升用户体验。',
-      },
-      {
-        title: '完全响应式设计',
-        description: '自动适配手机、平板、电脑等各种屏幕尺寸，随时随地畅读无阻。',
-      },
-      {
-        title: '多媒体内容支持',
-        description: '轻松嵌入图片、视频等多媒体内容，让文章表达更生动丰富。',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2194&q=80',
-      alt: '内容展示',
-    }}
-  >
-    <Fragment slot="content">让你的网站，真正代表你自己。</Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+      <h3 class="text-2xl font-bold mb-2">坚持内容驱动</h3>
+      用现代技术，记录每一个思考瞬间。
     </Fragment>
   </Content>
 
   <Steps
-    title="三步搭建你的个人网站，快速上线"
+    title="三步开启"
     items={[
-      {
-        title: '第一步：<span class="font-medium">获取模板</span>',
-        description: '前往 GitHub，Fork 本项目或点击「使用此模板」。几次点击，基础框架已就位。',
-        icon: 'tabler:package',
-      },
-      {
-        title: '第二步：<span class="font-medium">填充内容</span>',
-        description: '把你的文章、笔记、工具链接一一填入。内容是网站的灵魂。',
-        icon: 'tabler:letter-case',
-      },
-      {
-        title: '第三步：<span class="font-medium">定制样式</span>',
-        description: '调整颜色、字体与布局，直到它看起来就像你想要的样子。',
-        icon: 'tabler:paint',
-      },
-      {
-        title: '上线！',
-        icon: 'tabler:check',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-      alt: '操作步骤示意图',
-    }}
-  />
-
-  <Features2
-    title="常用页面组件"
-    subtitle="基于 Tailwind CSS 构建的高频组件，覆盖网站建设的各类场景需求"
-    tagline="组件库"
-    items={[
-      { title: '顶部导航', description: '导航是一切的起点。', icon: 'flat-color-icons:template' },
-      { title: '首屏 Hero', description: '抓住眼球，留住访客。', icon: 'flat-color-icons:gallery' },
-      { title: '功能展示', description: '清晰呈现核心优势。', icon: 'flat-color-icons:approval' },
-      { title: '内容区块', description: '内容为王。', icon: 'flat-color-icons:document' },
-      { title: '行动按钮', description: '引导用户下一步行动。', icon: 'flat-color-icons:advertising' },
-      { title: '联系方式', description: '数字信箱。', icon: 'flat-color-icons:business-contact' },
-    ]}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Features2>
-
-  <BlogLatestPosts
-    title="最新文章"
-    information="这里收录了我的最新原创文章与精选笔记。持续更新中，欢迎常来看看。"
-  />
-
-  <FAQs
-    title="常见问题"
-    subtitle="整理了一些大家最常问到的问题。"
-    tagline="FAQ"
-    classes={{ container: 'max-w-6xl' }}
-    items={[
-      {
-        title: '这个网站主要提供什么内容？',
-        description: '本站主要包含个人原创文章、精选转载、工具导航，以及量化期权工具。',
-      },
-      {
-        title: '如何联系站长？',
-        description: '可以通过页面底部的联系方式与我取得联系。',
-      },
+      { title: 'Step 1: 访问', description: '打开 dybrain.com', icon: 'tabler:package' },
+      { title: 'Step 2: 阅读', description: '寻找你需要的知识', icon: 'tabler:letter-case' },
+      { title: 'Step 3: 交流', description: '通过底部联系方式沟通', icon: 'tabler:check' }
     ]}
   />
 
-  <Stats
-    stats={[
-      { title: '原创文章', amount: '持续更新' },
-      { title: '收录工具', amount: '100+' },
-      { title: '导航链接', amount: '200+' },
-      { title: '月均访客', amount: '持续增长' },
-    ]}
-  />
+  <BlogLatestPosts title="最新文章" />
+
+  <FAQs title="常见问题" items={[{ title: '支持手机吗？', description: '完全支持响应式浏览。' }]} />
+
+  <Stats stats={[{ title: '原创文章', amount: '持续更新' }, { title: '工具导航', amount: '100+' }]} />
 
   <CallToAction
-    actions={[
-      {
-        variant: 'primary',
-        text: '开始探索',
-        href: 'https://github.com/arthelokyo/astrowind',
-        target: '_blank',
-        icon: 'tabler:arrow-right',
-      },
-    ]}
-  >
-    <Fragment slot="title">
-      内容&nbsp;+&nbsp;工具 · 一站搞定
-    </Fragment>
-
-    <Fragment slot="subtitle">
-      收藏本站，下次直接来。
-    </Fragment>
-  </CallToAction>
+    title="即刻收藏"
+    subtitle="无论读文章还是找工具，这里都有你想要的。"
+    actions={[{ variant: 'primary', text: '开始探索', href: '#' }]}
+  />
 </Layout>
