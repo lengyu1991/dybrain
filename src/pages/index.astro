@@ -1,3 +1,1754 @@
+Gemini
+Cloudflare 搭建个人网站指南
+与 Gemini 对话
+我在 claudefare 购买了一个域名，想搭建一个个人网站，主要放入一些文章，链接，小工具等，如何搭建，采用哪种架构，要求手机浏览器也能使用
+
+既然你已经在 Cloudflare 购买了域名，那么最推荐的方案就是直接使用 Cloudflare 提供的开发者平台。这种方案不仅完全免费（在个人使用范围内），而且与你的域名管理无缝集成，速度极快，且原生支持移动端响应式。
+
+针对你的需求（文章 + 链接 + 小工具），以下是 2026 年最主流的搭建方案和架构建议：
+
+1. 推荐方案：Astro + Cloudflare Pages
+这是目前构建兼具内容（博客）和功能（工具）的网站最理想的选择。
+
+为什么选择这个组合？
+极致性能：Astro 采用“岛屿架构”（Islands Architecture），默认不加载 JavaScript，文章打开速度极快。
+
+灵活性：它既能像 Hugo 编写 Markdown 文章，又能在需要时加入 React/Vue 编写你的“小工具”。
+
+移动端适配：通过内置集成的 Tailwind CSS，可以非常轻松地实现手机浏览器的完美适配。
+
+零成本托管：使用 Cloudflare Pages 托管，支持自动部署（你提交代码到 GitHub，网站自动更新）。
+
+2. 网站架构设计
+你的网站可以按照以下逻辑分层，确保它在手机和电脑上都好用：
+
+模块	实现方式	存储位置
+文章 (Blog)	Markdown / MDX 文件	项目本地目录 (Content Collections)
+链接 (Bookmarks)	JSON 或 YAML 文件	简单管理，也可接入 Cloudflare D1 数据库
+小工具 (Tools)	React / Svelte 组件	直接嵌入 Astro 页面，运行在用户浏览器
+后台逻辑 (API)	Cloudflare Workers	处理一些需要服务器的功能（如天气查询、汇率转换）
+3. 快速搭建步骤
+第一步：准备环境
+确保你的电脑安装了 Node.js。在终端运行以下命令创建一个 Astro 项目：
+
+Bash
+npm create astro@latest
+选择 "Include sample files" 方便你参考文章和页面的写法。
+
+第二步：添加 UI 框架（为了小工具）
+如果你想写一些交互式的小工具（如计算器、转换器），可以添加 React 支持：
+
+Bash
+npx astro add react tailwind
+Tailwind 会帮你快速处理手机端的响应式布局（Responsive Design）。
+
+第三步：连接 Cloudflare
+将你的代码上传到 GitHub。
+
+登录 Cloudflare 控制台，进入 Workers & Pages -> Create application -> Pages -> Connect to Git。
+
+选择你的仓库，框架预设（Framework preset）选择 Astro。
+
+点击部署。
+
+第四步：绑定域名
+部署完成后，在 Pages 项目的 Custom domains 选项中，添加你刚买的域名。Cloudflare 会自动帮你配置 DNS 和 SSL 证书。
+
+4. 手机端适配要点
+为了确保“手机浏览器也能使用”，在开发时请注意：
+
+Viewport 标签：确保 HTML 头文件中有 <meta name="viewport" content="width=device-width, initial-scale=1.0">（Astro 默认会带）。
+
+响应式布局：使用 Tailwind 的前缀，例如 class="grid grid-cols-1 md:grid-cols-3"（手机上 1 列，电脑上 3 列）。
+
+触摸友好：按钮和链接的点击区域至少要有 44x44 像素，防止手机误触。
+
+进阶建议：
+如果不想写代码：可以使用 Notion + Fruition 或者 Cloudflare 上的 WordPress 一键部署，但这在自定义“小工具”方面灵活性稍差。
+
+资源存放：图片建议放在 Cloudflare R2（对象存储），这样不会让你的代码库太臃肿。
+
+如何通过 GitHub 和 Cloudflare Pages 部署 Astro 网站
+
+这个视频详细展示了将本地开发的网站通过 GitHub 与 Cloudflare Pages 关联的全过程，适合你完成从域名购买到网站上线的最后一步。
+
+How to host website on Cloudflare Pages (Easiest Way)(2026 Guide) - YouTube
+How To with Alex · 344 次观看
+
+
+不够详细，我是一个小白，不懂电脑，我希望你尽可能详细的告诉我每一个步骤，手把手教我
+
+没问题，我们把这件事拆解成像拼乐高一样的步骤。你不需要懂复杂的编程，只需要按照顺序点击和复制粘贴。
+
+既然你已经在 Cloudflare 买了域名，我们采用最适合小白的 “GitHub + Cloudflare Pages” 方案。这个方案的优点是：全免费、不用自己买服务器、改完代码网站秒更新。
+
+第一阶段：准备好你的“工具箱”
+在正式动手前，你需要注册两个账号（都是免费的）：
+
+GitHub 账号：github.com（这是存放你网站文件的地方）。
+
+Cloudflare 账号：你已经有了（这是发布网站和管理域名的地方）。
+
+第二阶段：手把手搭建步骤
+第一步：在 GitHub 上找个“模版”
+对于小白，自己写代码太难，我们直接用别人写好的精美模版。
+
+登录 GitHub 后，搜索 Astro blog template，或者直接访问这个极简模版：Astro Nano。
+
+点击右上角的 "Use this template" -> "Create a new repository"。
+
+Repository name 随便填（比如 my-website），选 Public，然后点击 Create repository。
+
+现在，你已经拥有了一个属于自己的网站代码仓库。
+
+第二步：连接到 Cloudflare Pages（发布网站）
+登录 Cloudflare 控制台。
+
+在左侧菜单点击 “Workers 和 Pages”。
+
+点击 “创建应用程序” -> “Pages” -> “连接到 Git”。
+
+点击 “连接到 GitHub”，授权后选择你刚才创建的那个 my-website 仓库。
+
+构建设置：
+
+框架预设：选择 Astro。
+
+其他的都不用改，直接点 “保存并部署”。
+
+等待 2 分钟，你会得到一个以 .pages.dev 结尾的临时网址。打开它，你的网站已经上线了！
+
+第三步：绑定你买的大域名
+在刚才的 Pages 项目页面，点击顶部的 “自定义域” 选项卡。
+
+点击 “设置自定义域”，输入你在 Cloudflare 买的域名（如 yourname.com）。
+
+按照提示点击“激活”，Cloudflare 会自动帮你把域名指向这个新网站。
+
+第三阶段：如何修改内容（放文章和链接）
+你不需要学习专业的编程软件，直接在网页上就能改：
+
+回到你的 GitHub 仓库页面。
+
+点击进入 src/content/blog 文件夹。
+
+点击现有的 .md（Markdown）文件，点击右上角的 “小铅笔”图标 即可在线编辑。
+
+标题、日期：在文件最上方的两根横线之间修改。
+
+正文：直接像写记事本一样在下面写。
+
+修改完后，拉到最下面点击 “Commit changes”（提交修改）。
+
+奇迹发生了：只要你一点击提交，Cloudflare 会在 1 分钟内自动感应到变化，并更新你的网站。
+
+第四阶段：如何添加“小工具”和链接
+作为小白，初期建议使用“嵌入式”方案，这不需要你写代码：
+
+1. 添加导航链接
+在 GitHub 仓库里找到 src/consts.ts 或类似命名的文件，里面通常有 NAV_LINKS 这样的字样。你只需要把括号里的网址换成你想要的链接即可。
+
+2. 添加小工具（最简单的方法）
+如果你想在网站里放个天气预报、汇率转换或者时钟：
+
+去类似 Indify 或搜索 “Widget embed code” 找你需要的小工具。
+
+它们会给你一段像 <iframe src="..."></iframe> 的代码。
+
+你只需把这段代码复制，粘贴到你 GitHub 里的 Markdown 文章中，它就会在网页上显示出来。
+
+为什么这个方案手机能用？
+这种“响应式架构”会自动根据屏幕宽度调整布局：
+
+在电脑上：导航栏在顶部，文章占据中间，侧边可能有工具栏。
+
+在手机上：导航栏会自动缩成一个“三道杠”图标（汉堡菜单），文字会自动放大以便阅读，图片也会自动缩小不超出屏幕。
+
+给小白的特别嘱咐：
+不要怕出错：GitHub 有“版本回退”功能，改乱了可以随时撤回。
+
+关于图片：不要直接把高清大图往 GitHub 传，网站会变慢。建议把图发到微博或专门的图床（如 SM.MS），然后在文章里引用图片链接。
+
+遇到不懂的词：看到 NPM、Terminal、Build failed 这种词先不用慌，大多数时候你只需要在 GitHub 网页上点点“小铅笔”编辑文字就行。
+
+你现在可以先试着完成第二阶段的第一步，成功创建仓库了吗？
+
+wise-Invest.org 看一下这个网页采用的哪种架构
+
+你提到的 wise-invest.org 是一个非常典型的现代个人品牌/内容聚合平台。
+
+通过对该网站的分析，它的架构和你想要搭建的“个人网站（文章+链接+工具）”需求几乎完全吻合。它的核心架构方案可以总结为：
+
+1. 核心架构：SSG（静态网站生成）+ 响应式框架
+该网站采用的是 Next.js 或 Astro 这类现代前端框架搭建的。
+
+为什么这么判断：网页加载极快，点击不同页面时没有明显的“白屏”刷新感（这是单页应用 SPA 或静态渲染的特征）。
+
+小白可以借鉴的点：这种架构能保证网站在手机浏览器上和电脑上一样流畅。它会自动根据屏幕大小调整排版（例如它的“7大功能”在电脑上是横排，在手机上会自动变成竖排）。
+
+2. 技术栈详细拆解（你可以直接复用的“配方”）
+模块	采用的技术/方案	作用
+基础框架	Astro / Next.js	网站的骨架，负责把代码转换成网页。
+UI 组件库	Tailwind CSS + Shadcn/ui	负责“长相”。这就是为什么它的按钮、卡片看起来很精致且自带动画。
+托管与域名	Cloudflare Pages	跟你目前的情况完全一样。它利用 Cloudflare 的全球加速，让国内用户打开也很快。
+内容存储	MDX (Markdown + JS)	它的文章是 Markdown 格式，但里面能嵌入“复利计算器”等动态小工具。
+动态小工具	React 组件	比如它网页里的“复利计算器”、“时光机”，是单独写好的代码块直接塞进文章里的。
+3. 给你的手把手建议：如何“仿制”这种架构？
+既然你已经在 Cloudflare 买了域名，你可以直接按照以下路径去实现和 wise-invest.org 类似的网站：
+
+第一步：选择一个“长得像”的模版
+你不需要从零开始写。去 GitHub 搜索 Astro Portfolio template 或 Astro finance blog。
+
+推荐搜索关键词：shadcn astro template。
+
+这种模版通常已经帮你把导航栏、手机端适配、深色模式都做好了。
+
+第二步：处理“小工具” (Widgets)
+wise-invest.org 里的“复利计算器”这类工具，对于小白来说最快的实现方法有两种：
+
+AI 辅助编写：把你的需求告诉 AI（比如：请帮我用 React 写一个简单的复利计算器代码），然后把代码复制到你网站项目的 components 文件夹里。
+
+低代码嵌入：如果你觉得写代码难，可以使用一些现成的网页插件，通过 <iframe> 标签直接粘贴到你的 Markdown 文章里。
+
+第三步：部署到 Cloudflare
+这步和你之前操作的一样：
+
+把代码放在 GitHub。
+
+在 Cloudflare 控制台关联这个 GitHub 仓库。
+
+点击部署，绑定你的域名。
+
+总结
+wise-invest.org 的架构精髓在于：极简的静态页面 + 强大的 CSS 框架（Tailwind） + 云端托管（Cloudflare）。
+
+这种架构非常适合你：
+
+对手机极其友好：原生支持响应式。
+
+维护成本极低：除了域名费（你已付），托管几乎是永久免费。
+
+安全性高：由于是静态网站，没有数据库，很难被黑客攻击。
+
+你可以先尝试在 GitHub 上找一个基于 Astro 且带有 Tailwind CSS 的模版，这是通往这类网站最快的捷径。
+
+到底是astro 还是next.js
+
+如果你是一个完全没有开发经验的小白，且目标是搭建一个以**内容为主（文章、链接、导航）**的个人网站，我的建议非常明确：
+
+选 Astro，不要选 Next.js。
+虽然两者都能做出像 wise-invest.org 那样的效果，但对于你来说，它们的难度和性质完全不同。
+
+1. 为什么选 Astro？（小白友好型）
+Astro 是专门为“以内容为中心”的网站设计的（如博客、作品集、文档、工具收集）。
+
+像写文档一样简单：你可以直接把写好的 Markdown (.md) 文件丢进文件夹，它就自动变成网页了。
+
+速度快得惊人：Astro 会在发布时把所有代码变成纯 HTML，这意味着你的网站在手机端打开几乎是秒开。
+
+“按需加载”小工具：如果你想在文章里塞一个计算器，Astro 只会在用户滑到那个计算器时才加载相关代码，不会让手机卡顿。
+
+学习曲线平缓：你只需要懂一点基础的 HTML 知识就能上手，不需要先去学复杂的 JavaScript 深度逻辑。
+
+2. 为什么 Next.js 对你来说太重了？
+Next.js 是目前世界上最流行的前端框架，但它是为复杂的商业应用设计的（如拼多多网页版、复杂的后台管理系统）。
+
+门槛极高：要玩转 Next.js，你必须先深入学习 React、状态管理、服务器组件（Server Components）等专业知识。
+
+过度设计：对于一个放文章和工具的个人站，Next.js 就像是“开着坦克去买菜”，不仅油费贵（配置复杂），操作也累。
+
+性能陷阱：如果不经过专业优化，Next.js 的网站在手机端加载会比 Astro 慢，因为它默认会带很多 JavaScript 包。
+
+3. 核心对比：决定你的选择
+特性	Astro (推荐)	Next.js (慎选)
+主要用途	博客、导航站、工具集、文档	社交平台、电商、复杂 SaaS
+上手难度	⭐（小白级）	⭐⭐⭐⭐（专业开发者级）
+手机访问速度	极快（默认几乎无脚本）	快（但取决于你的代码水平）
+修改内容方式	改改 Markdown 文件就行	需要理解组件和数据流
+配合 Cloudflare	完美适配（Pages 原生支持）	支持，但部分高级功能受限
+4. 你的下一步行动建议
+既然你已经在 Cloudflare 买了域名，并且想要一个像 wise-invest.org 那样的投资工具站：
+
+去 GitHub 搜索： Astro blog theme。
+
+找一个喜欢的样子：比如 AstroPaper 或者 Cactus。
+
+克隆并部署：直接用我之前教你的“连接 GitHub 到 Cloudflare Pages”的方法。
+
+总结建议：
+如果你想快速上线网站、省心维护、手机打开飞快，请认准 Astro。当你能熟练使用 Astro 修改文字和布局后，你会发现这比用 Word 难不了多少。
+
+既然你现在拥有了域名，你打算给你的网站起个什么名字？我可以帮你找一个更贴合你品味的 Astro 模版。
+
+在左侧菜单点击 “Workers 和 Pages”。这个没看到
+
+找不到这个按钮很正常，Cloudflare 的界面偶尔会因为语言设置或者版本更新发生变动。
+
+如果你在左侧主菜单没看到 “Workers 和 Pages”，请尝试以下三个方法找到它：
+
+1. 检查侧边栏的图标
+Cloudflare 有时会折叠菜单。请看网页左侧的那一排图标，找一个**看起来像“三个小方块叠在一起”或者“闪电”**的图标。
+
+通常它的位置在 “站点 (Websites)” 下方几格。
+
+新版界面中，它可能被归类在 “计算 (Compute)” 或 “开发者平台 (Developer Platform)” 类别下。
+
+2. 直接搜索（最快的方法）
+在 Cloudflare 网页的最顶端，有一个搜索框（上面写着 Search or jump to...）。
+
+在里面输入 Pages。
+
+你会看到搜索结果里出现 “Pages” 或 “Workers & Pages”，直接点击即可。
+
+3. 直接通过网址访问
+确保你已经登录了 Cloudflare，然后直接在浏览器地址栏输入或复制这个网址：
+
+https://dash.cloudflare.com/?to=/:account/workers-and-pages
+(这会自动跳转到你账户下的 Workers 和 Pages 页面)
+
+进入页面后该怎么做？
+当你成功进入这个页面后，你会看到两个选项卡：一个叫 Workers，一个叫 Pages。
+
+一定要点选 “Pages”。
+
+然后点击蓝色按钮 “连接到 Git” (Connect to Git)。
+
+常见问题排查：
+语言问题：如果你的界面是英文的，它叫 Workers & Pages。如果你想切换成中文，点击页面右上角的小人图标 -> Language -> 选择 简体中文。
+
+权限问题：如果你是刚注册的账号，确保你已经去邮箱里点击了 Cloudflare 发给你的验证链接。未验证邮箱的账号有时功能显示不全。
+
+找到了吗？如果还是没看到，你可以告诉我你现在左侧菜单看到的第一个和第二个选项是什么，我帮你定位。
+
+太棒了！你已经进入最关键的配置页面了，dybrain 这个名字起得非常好（数字大脑，非常契合你想要搭建个人知识库的初衷）。
+
+看到你截图中的“部署命令”显示 npx wrangler deploy，这说明你可能误选了 Workers 项目，而我们之前建议的是 Pages 项目。不过别担心，在这个界面我们只需要微调一下就能成功。
+
+请按照以下步骤操作（非常重要）：
+
+1. 关键调整：选择“框架预设”
+在你截图位置的上方（你可能需要往上滚动一点点页面），应该有一个选项叫 “框架预设 (Framework preset)”。
+
+请点击那个下拉框，从列表里找到并选择 “Astro”。
+
+一旦你选了 Astro，下方的“构建命令”会自动变成 npm run build，“输出目录”会自动变成 dist。
+
+2. 检查目前的配置
+如果你的界面没有下拉框，请手动确保参数如下：
+
+构建命令：npm run build
+
+输出目录：dist
+
+部署命令：留空（Pages 方案通常不需要填这一项，如果你选对了 Astro 预设，这一栏通常会消失或自动处理）。
+
+3. 点击“部署”
+确认无误后，点击右下角那个蓝色的 “部署” 按钮。
+
+部署后你会看到什么？
+进度条：你会看到 Cloudflare 开始下载你的 GitHub 代码并进行“构建”。这通常需要 1-3 分钟。
+
+成功标志：如果一切顺利，你会看到满屏的绿色打勾，并给你一个类似 dybrain.pages.dev 的链接。
+
+如果报错了：不要慌，截图发给我，通常是因为 GitHub 里的代码模版还没准备好，或者 Node.js 版本不对，我会告诉你改哪里。
+
+特别提醒：
+我看你的项目名称写的是 dybrain，这个名字会决定你默认的临时访问地址。等你这一步部署成功了，我们下一步就去把你在 Cloudflare 买的正式域名（dybrain.com）绑定上去，这样你的“数字大脑”就正式对全世界开放了！
+
+现在，请点一下那个蓝色的“部署”按钮试试看？
+
+看到这张截图，我发现了一个关键的小偏差：你现在进入的是 Workers 的部署界面，而不是 Pages 的部署界面。
+
+虽然它们都在一个大菜单下，但 Workers 是用来运行复杂后端代码的，而 Pages 才是专门用来托管你这种“个人网站”的。如果你强行点“部署”，大概率会报错。
+
+请跟我一起做以下调整：
+
+第一步：退回到正确的入口
+点击页面左上角的 “返回”，直到你回到 “Workers 和 Pages” 的主页面。
+
+在页面上方，你会看到两个标签：Workers 和 Pages。请务必点击 “Pages”。
+
+点击 “连接到 Git” (Connect to Git) 那个蓝色按钮。
+
+第二步：重新选择仓库
+选择你之前在 GitHub 上创建的那个存放 Astro 模版的仓库（比如 my-website 或 dybrain）。
+
+点击 “开始设置”。
+
+第三步：填入正确的配置（关键）
+一旦你进对了 Pages 的设置页面，你看到的选项会和你刚才截图里的不一样：
+
+项目名称：输入 dybrain。
+
+框架预设 (Framework preset)：在下拉菜单里选择 Astro。
+
+选完后，下方的“构建命令”会自动变成 npm run build，你不必手动输入。
+
+环境变量 (Environment variables)：小白可以先不管，保持默认。
+
+第四步：点击部署
+这时候再点击右下角的 “保存并部署”。
+
+为什么之前的截图不对？
+你刚才截图中出现的 npx wrangler deploy 是用来部署“云函数”的。我们搭建网站只需要 Pages，它会自动识别你的 Astro 代码并帮你生成网页，这种方式最简单，也最不容易出错。
+
+请尝试退回去，确认点击了顶部的 "Pages" 标签，然后重新开始这一小步。如果看到有 "Framework preset" (框架预设) 的下拉框，那就找对地方了！
+
+这就对了！这是最正确的入口。
+
+请点击截图里的第一个选项：“Continue with GitHub”（继续使用 GitHub）。
+
+点击之后的操作流程如下：
+
+授权登录：系统会跳出一个 GitHub 的小窗口，问你是否允许 Cloudflare 访问你的仓库。点击绿色的 "Authorize" 按钮允许即可。
+
+选择仓库：授权成功后，你会看到你在 GitHub 上创建的所有项目列表。找到你刚才创建的那个 Astro 模版仓库（如果你还没创建，可以先点击“选择模板”按钮直接用 Cloudflare 自带的 Astro 模板，但我更推荐你用之前在 GitHub 找好的那个）。
+
+进入配置页：选中仓库后，点击底部的“开始设置”。
+
+接下来的关键配置（手把手版）：
+当你进入下一个页面后，你会看到很多选项，只需要关注以下三个：
+
+项目名称：填 dybrain。
+
+框架预设 (Framework preset)：在下拉列表里选择 Astro。
+
+构建命令：选完 Astro 后，它会自动填入 npm run build。请确保这一行没错。
+
+输出目录：它会自动填入 dist。请确保这一行没错。
+
+为什么要走这一步？
+通过这个方式，你的 GitHub 账号和 Cloudflare 就“锁死”了。以后你只要在手机或电脑上修改了 GitHub 里的文章，Cloudflare 就会自动帮你重新发布，你再也不用回这个后台来点“部署”了。
+
+请点击“Continue with GitHub”，看看能不能看到你的仓库列表？
+
+这里怎么选
+
+虽然这个界面写着 "Worker project"，但因为你选的是 Cloudflare 官方自带的 Astro 模板，它会自动处理好。这步非常简单，我们直接配置：
+
+1. 勾选“创建专用 Git 存储库”
+请一定要勾选那个复选框（创建专用 Git 存储库）。
+
+作用：勾选后，Cloudflare 会自动在你的 GitHub 账号里创建一个名为 astro-blog-starter-template 的项目。这样以后你改文章，只需要去你的 GitHub 里改就行了。
+
+2. 项目名称
+目前是 astro-blog-starter-template。
+
+建议：你可以把它改成 dybrain，这样更好记，以后你的临时网址就是 dybrain.pages.dev。当然不改也可以。
+
+3. 构建命令（往下拉一点就能看到）
+通常它已经自动填好了。请确认一下：
+
+框架预设：应该是 Astro。
+
+构建命令：npm run build。
+
+输出目录：dist。
+
+4. 点击“部署”
+直接点右下角蓝色的 “部署” 按钮。
+
+接下来会发生什么？
+自动创建仓库：Cloudflare 会在你的 GitHub (lengyu1991) 下新建一个文件夹。
+
+开始构建：你会进入一个黑色的日志屏幕，看到一串串代码在跑。
+
+就像厨师在厨房做菜，你需要等它 2 分钟。
+
+大功告成：当看到“祝贺你！你的项目已部署”时，你的第一个网站就正式上线了。
+
+做完这一步，你一定要告诉我！
+因为这是“骨架”搭好了。下一步我会教你最关键的两个动作：
+
+如何把这个网站绑定到你买的 dybrain.com 域名上。
+
+如何不用写代码，直接在 GitHub 网页上像发朋友圈一样写你的第一篇博文。
+
+现在，勾选那个复选框，然后点“部署”吧！
+
+没有输出目录
+
+从截图看，因为这是 Cloudflare 官方提供的模版流，它把一些选项隐藏在“后台”了，所以你没看到“输出目录”是完全正常的。
+
+由于你选的是官方 Astro 模版，它默认就已经知道输出目录是 dist 了。你现在不需要手动填入任何东西，直接按照以下操作即可：
+
+1. 确认设置
+项目名称：dybrain-astro（没问题）。
+
+构建命令：npm run build（正确）。
+
+部署命令：npm run deploy（这是官方模版预设的，保持原样即可）。
+
+2. 执行最后一步
+直接点击右下角蓝色的 “部署” 按钮。
+
+点击后会发生什么？（手把手预告）
+进入“构建日志”页面：你会看到一个黑色的背景，上面不停地跳动白色的文字（像电影里的黑客代码）。这是 Cloudflare 在帮你把 Astro 代码转换成真正的网页文件。
+
+等待 1-2 分钟：直到文字停止跳动，屏幕上方会出现一行绿色的字：“Success! Your site is live!”（成功！你的网站已上线）。
+
+获取临时地址：它会给你一个类似 https://dybrain-astro.pages.dev 的链接。你可以先点开看看，这时候你的网站应该已经可以访问了！
+
+部署成功后，我们要做的第一件事：
+一旦你看到“部署成功”的界面，请告诉我。接下来我会教你如何把这个网站链接到你买的 dybrain.com 域名上。
+
+现在，放心大胆地点击“部署”吧！
+
+非生产分支构建要勾选吗
+
+这是一个非常好的细节问题！
+
+结论：作为个人网站，建议保持勾选，或者直接点部署，不用太纠结。
+
+什么是“非生产分支构建”？
+通俗点说，你的网站目前只有一个主分支（叫 main），这是你的“生产环境”（也就是大家访问 dybrain.com 看到的内容）。
+
+如果勾选（推荐）：以后如果你想测试一些新功能，或者写一篇还没想好要不要发布的文章，你可以创建一个“临时分支”。Cloudflare 会帮你把这个临时的版本也搭出来，给你一个专属的预览链接，只有你能看到，不会影响正式运行的 dybrain.com。
+
+如果不勾选：Cloudflare 只会管你的主分支，其他分支的代码它会假装看不见。
+
+为什么对你（小白用户）有好处？
+容错率高：如果你以后想改个网页背景颜色，怕改丑了，你可以在新分支改。勾选了这个，你就能先在预览链接里看一眼，满意了再合并到正式网站。
+
+不收费：Cloudflare 对这个功能不额外收钱。
+
+现在的操作建议：
+既然你现在正处于“手把手部署”的最后关头，保持它目前的勾选状态即可（也就是维持截图里的样子），直接点击 “部署”。
+
+部署后的“小剧透”：
+点击部署后，你会看到 Cloudflare 像流水线一样开始工作：
+
+Initializing (初始化)：准备服务器。
+
+Cloning (克隆)：把你 GitHub 里的代码搬过来。
+
+Building (构建)：把代码“翻译”成网页。
+
+Deploying (发布)：推送到全球服务器。
+
+点下“部署”按钮后，如果看到满屏跳动的白色文字，就说明你已经成功迈出了“站长”生涯的第一步！等它跑完，我们就去绑定域名。
+
+为什么输入网址打不开
+
+如果你已经点击了“部署”并且显示成功，但输入网址（比如 dybrain-astro.pages.dev）却打不开，通常是因为以下三个原因。
+
+别担心，这是每个“新晋站长”都会遇到的入门小坑：
+
+1. 还没到“起效”的时间（DNS 缓存）
+你刚刚部署成功，虽然 Cloudflare 的服务器已经准备好了，但全球的互联网节点更新你的网址路径需要一点时间。
+
+解决办法：等 3-5 分钟再试。或者尝试用手机的 4G/5G 网络（不要连 Wi-Fi）访问试试。
+
+2. HTTPS 证书正在生成
+Cloudflare 会自动为你的新网址配一个“安全锁”（HTTPS）。在部署完的前几分钟，证书可能还没发下来。
+
+症状：浏览器提示“您的连接不是私密连接”或“安全连接失败”。
+
+解决办法：点击浏览器页面上的“高级”，选择“继续前往（不安全）”，或者干脆等几分钟。
+
+3. 你访问的是“老域名”还是“新地址”？
+检查点 A：请务必检查你输入的地址是否正确。你应该输入的是 Cloudflare 给你的以 .pages.dev 结尾的那个临时地址。
+
+检查点 B：如果你输入的是你买的 dybrain.com，那现在肯定打不开！因为我们还没有把你的域名和这个项目绑定在一起。
+
+现在，请尝试以下操作排查：
+回到 Cloudflare 控制台：看看刚才部署完的页面，找到那行蓝色的链接（通常在页面最上方，长得像 https://xxxx.pages.dev）。
+
+点击这个链接：如果点击这个官方给的链接能打开，说明网站没问题，只是你可能记错网址了。
+
+刷新大法：如果显示 404，请确认你的 Astro 模版里 dist 目录下确实有 index.html 文件（这一点 Cloudflare 官方模版通常不会出错）。
+
+接下来的关键一步：绑定你的正式域名
+如果你已经能通过 xxxx.pages.dev 看到网页了，我们现在就把你买的域名接上去：
+
+在 Cloudflare 的 Pages 项目页面，点击顶部的 “自定义域” (Custom domains)。
+
+点击蓝色按钮 “设置自定义域”。
+
+输入你购买的域名：dybrain.com（或者你买的那个）。
+
+点击 “激活域名”。
+
+Cloudflare 会问你是否自动更新 DNS，直接点确认/同意。
+
+做完这一步后，通常需要等待 10 分钟到 1 小时，之后你就可以直接输入你的正式域名看到你的“数字大脑”了！
+
+你现在的报错页面显示的是什么？（是“无法访问此网站”、“404 Not Found” 还是 “连接超时”？）告诉我具体字样，我能更精准地帮你。
+
+网页已经建好了，怎么调整网页呢
+
+恭喜你！网站上线意味着你的“数字大脑”已经有了骨架。现在我们要进入最有趣的环节：装修和填充内容。
+
+因为你选的是 Cloudflare 的官方 Astro 模版，你所有的网页内容其实都存放在你的 GitHub 仓库里。你不需要在 Cloudflare 里改，而是要去 GitHub 改。
+
+以下是手把手教你调整网页的三个最常用操作：
+
+1. 修改网站标题和名称（装修门面）
+你想把网站顶部的“Astro Blog”改成“Dybrain”或者“戴裕的数字大脑”：
+
+打开你的 GitHub，进入你的项目仓库（名字应该是 dybrain-astro）。
+
+找到一个叫 src/consts.ts 或 src/site.config.ts 的文件（文件名可能略有不同，但通常在 src 文件夹下）。
+
+点击文件右上角的 “小铅笔”图标 进行编辑。
+
+找到类似 SITE_TITLE = '...' 或 SITE_DESCRIPTION = '...' 的代码行。
+
+把单引号里的内容改成你想写的中文，比如：SITE_TITLE = 'Dybrain | 数字大脑'。
+
+拉到最下面点击绿色的 “Commit changes”（保存）。
+
+2. 发布你的第一篇文章（填充内容）
+Astro 模版的文章都放在一个专门的文件夹里：
+
+在 GitHub 仓库中，进入路径：src/content/blog/。
+
+你会看到里面有几篇演示文章（后缀是 .md）。
+
+新建文章：点击右上角的 “Add file” -> “Create new file”。
+
+命名：起个名字，比如 my-first-post.md（必须以 .md 结尾）。
+
+内容格式（复制下面的内容作为模版）：
+
+Markdown
+---
+title: "我的第一篇投资笔记"
+description: "这是我用 Astro 搭建的数字大脑的第一篇文章"
+pubDate: "2026-04-15"
+---
+这里开始写你的正文。你可以写：
+## 今日投资感悟
+* 标普500走势分析
+* 期权策略心得
+点击 “Commit changes” 保存。
+
+3. 如何在网页里放“小工具”或“链接”
+对于小白，最简单的方法是直接在文章里插入链接和工具：
+
+放链接：在写文章时，使用格式 [显示文字](网址)。例如：[我的 Wise 账户](https://wise.com)。
+
+放工具：如果你想放像 wise-invest.org 那样的复利计算器，目前最快的方法是去搜“复利计算器 嵌入代码”，会得到一段 <iframe>...</iframe> 代码。你直接把这段代码粘贴到你的 .md 文章正文里即可。
+
+最神奇的地方（自动化部署）：
+当你点击 GitHub 上的 “Commit changes” 那一刻，Cloudflare 的后台会自动感应到你改了东西。
+
+它会自动开始重新构建。
+
+大约 1 分钟后，你直接刷新你的域名 dybrain.com，刚才改的内容就直接生效了！
+
+给你的一个小作业：
+试着去 src/content/blog/ 文件夹下，把其中一篇演示文章的内容改几个字，然后看看你的网站是不是变了？
+
+**另外，你买的那个 dybrain.com 域名，在 Cloudflare 的 "Custom domains"（自定义域）里绑定成功了吗？**成功的话，你现在就可以用手机直接访问正式网址了！
+
+我要加组件呢
+
+要在 Astro 网站中加入组件（比如 wise-invest.org 里的复利计算器、期权损益图或简单的交互按钮），你有两种方式。
+
+考虑到你是一个小白，我们按照从**“最简单”到“专业”**的顺序来。
+
+方案一：使用“代码碎片”嵌入（最简单，无需改结构）
+如果你在网上找到了现成的小工具（比如 TradingView 的走势图、天气预报、或者汇率转换器），它们通常会提供一段 <iframe> 或 <script> 代码。
+
+打开你的 GitHub，进入 src/content/blog/。
+
+新建或编辑一篇 .md 文章。
+
+直接把代码粘贴进去。
+
+例如：
+
+HTML
+<iframe src="某个计算器的网址" width="100%" height="500px"></iframe>
+保存，网站上就会出现这个工具。
+
+方案二：让 AI 帮你写一个专属组件（最推荐）
+如果你想要一个像 wise-invest.org 那样漂亮的、原生风格的“复利计算器”，可以利用 Astro 的组件化特性。
+
+第一步：让 AI 生成代码
+你可以对我说：“请帮我写一个基于 React 和 Tailwind CSS 的复利计算器组件，要求手机端适配，样式要简洁美观。”
+
+第二步：在 GitHub 中创建组件文件
+进入 GitHub 仓库的 src/components/ 文件夹（如果没有这个文件夹，就新建一个）。
+
+点击 Add file -> Create new file。
+
+命名为 Calculator.tsx（注意后缀是 .tsx）。
+
+把 AI 写的代码全选、复制、粘贴进去，点击 Commit changes。
+
+第三步：在文章里“召唤”这个组件
+这是 Astro 最强大的地方。打开你想放工具的那篇 .md 文章，在最上面的两根横线之间（Frontmatter）加入一行：
+
+Markdown
+---
+title: "我的投资工具箱"
+...
+---
+import Calculator from '../../components/Calculator.tsx';
+
+<Calculator client:load />
+注意：<Calculator client:load /> 这一行是关键，client:load 告诉网页在手机打开时要加载这个工具的交互功能。
+
+方案三：使用现成的组件库（适合进阶）
+wise-invest.org 看起来很高级，是因为它用了 Tailwind CSS 和 Shadcn/ui 这种组件库。
+
+Tailwind CSS：你的 Astro 模板大概率已经内置了。它让你通过写简单的单词（如 bg-blue-500）就能改变按钮颜色。
+
+Lucide React：这是一个图标库。如果你想在网页加个“银行”或“股票”的图标，可以直接引用。
+
+针对你的具体需求：
+你想加一个什么样的组件？ * 是一个简单的链接导航墙（像书签一样）？
+
+还是一个计算工具（复利、税率、期权保证金计算）？
+
+还是一个数据看板（实时监控某几个股票的价格）？
+
+你告诉我具体功能，我直接把可以直接运行的代码写给你，你只需要复制粘贴到 GitHub 里对应的位置就能看到效果。
+
+小贴士：由于你是通过 Cloudflare 官方模版搭建的，如果你在添加 React 组件（.tsx 文件）时报错，可能需要先运行一次 npx astro add react。如果你不会操作，告诉我，我教你如何在 GitHub 网页端“曲线救国”完成配置。
+
+为什么手机浏览器打不开
+
+如果你的电脑端能打开，但手机浏览器打不开，通常不是网站坏了，而是网络路径或域名解析的问题。
+
+请按照以下三个步骤排查，90% 的问题都能解决：
+
+1. 检查你输入的是哪个网址？
+如果是 xxxx.pages.dev（临时地址）：
+
+请确保手机和电脑输入的字符完全一致（手机输入法经常会自动把首字母大写，或者在末尾加个空格，这会导致打不开）。
+
+如果是 dybrain.com（你买的域名）：
+
+原因：你可能还没在 Cloudflare 里完成“绑定”操作，或者 DNS 解析还没在全球生效。
+
+解决：回到 Cloudflare 控制台 -> Workers 和 Pages -> 点击你的项目 -> 自定义域。看看那里有没有显示 有效（绿色打勾）。如果没有，点击“设置自定义域”把域名填进去。
+
+2. Wi-Fi 屏蔽或运营商缓存（最常见原因）
+国内部分宽带运营商（如电信、联通、移动）对新上线的 .dev 或某些海外域名存在解析延迟，或者你的 Wi-Fi 开启了拦截。
+
+操作：关掉手机 Wi-Fi，切换到手机流量（4G/5G）访问。
+
+如果流量能打开，Wi-Fi 打不开，说明是你家路由器的 DNS 还没刷新。你可以尝试在手机设置里把 DNS 手动改成 1.1.1.1 或 8.8.8.8。
+
+3. HTTPS 安全证书还没发下来
+Cloudflare 会为每个新站申请 SSL 证书（就是网址前面的那个小锁）。
+
+症状：手机显示“连接不安全”或“协议错误”。
+
+解决：证书申请通常需要 10-30 分钟。如果刚部署完，请耐心等一会儿。
+
+4. 你的手机浏览器拦截了？
+有些手机自带的浏览器（比如华为、小米自带的浏览器）安全等级很高，会拦截没有备案或者新出的域名。
+
+操作：下载一个手机版的 Chrome 浏览器 或 Safari 试试。
+
+如何判断网站到底好没好？
+你可以把你的网址（比如 dybrain-astro.pages.dev）发给一个外地的朋友，或者直接告诉我。如果我能打开，说明你的网站架构是完全正确的，纯粹是你本地手机网络“还没反应过来”。
+
+你现在手机浏览器显示的具体报错是什么？
+
+是 “404 Not Found”？
+
+是 “无法连接到服务器”？
+
+还是 “您的连接不是私密连接”？
+
+告诉我具体字样，我能告诉你接下来点哪儿。
+
+我怎么把网页都变成中文
+
+要把网页完全变成中文，你需要做两个层面的操作：修改内容（看得见的地方） 和 修改系统声明（告诉浏览器这是中文站）。
+
+由于你使用的是官方模版，请按照以下三个步骤在你的 GitHub 仓库里进行修改：
+
+第一步：修改系统语言声明（最基础）
+这一步是告诉手机浏览器：“这是一个中文网站，不要弹出‘是否翻译此页面’的提示”。
+
+在 GitHub 仓库中，找到 src/layouts/Layout.astro（或者 BaseHead.astro）。
+
+点击“小铅笔”图标编辑。
+
+找到第一行或第二行的 <html lang="en">。
+
+把 en 改成 zh-cn。
+
+修改后应该是：<html lang="zh-cn">
+
+保存（Commit changes）。
+
+第二步：修改导航栏和按钮（装修）
+模版自带的导航菜单（如 Home, Blog, About）需要手动翻译。
+
+在 src 文件夹下寻找名为 consts.ts、config.ts 或 header.astro 的文件。
+
+查找类似这样的代码块：
+
+JavaScript
+export const NAV_LINKS = [
+  { href: '/', title: 'Home' },
+  { href: '/blog', title: 'Blog' },
+]
+把英文标题改为中文：
+
+JavaScript
+export const NAV_LINKS = [
+  { href: '/', title: '首页' },
+  { href: '/blog', title: '文章' },
+  { href: '/about', title: '关于' },
+]
+保存（Commit changes）。
+
+第三步：处理现有的英文演示文章
+你看到的网页内容大多数是模版自带的 .md 文件。
+
+进入 src/content/blog/ 文件夹。
+
+把里面原有的英文 .md 文件全部删除，或者把它们的内容改掉。
+
+新建文章时，确保文件最上面的 title 和 description 都写成中文：
+
+Markdown
+---
+title: "我的第一篇中文文章"
+description: "这是关于投资的记录"
+pubDate: "2026-04-15"
+---
+第四步：修改首页的欢迎词
+找到 src/pages/index.astro 文件。
+
+你会看到里面有很多 HTML 标签（比如 <h1>Welcome to my blog</h1>）。
+
+直接把这些英文句子删掉，换成你想要的中文，比如：<h1>欢迎来到我的数字大脑</h1>。
+
+保存。
+
+温馨提示：
+不要动代码逻辑：只修改引号里面的文字。比如 class="text-xl" 这种带类名的千万不要改，只改 >Welcome< 这种尖括号中间的内容。
+
+等待生效：你在 GitHub 改完并保存后，Cloudflare 会自动重新构建。大约 2 分钟后，你刷新手机网页就能看到中文了。
+
+如果你在某个文件里看到一大串英文不敢改，可以把那段代码截图或复制给我，我直接告诉你哪几行可以改成中文。
+
+有米有模版天生就是中文的不需要改的
+
+当然有！直接使用中文开发者制作的模版是“偷懒”最有效的办法，这样你的导航栏、时间格式、搜索功能天生就是中文的。
+
+针对你的需求（文章 + 链接 + 小工具），我为你精选了两个目前 Astro 圈子里最火、最符合你“数字大脑”风格的中文模版。
+
+1. 推荐模版：Astro Blog - 纯净中文版
+这个模版由国内开发者维护，界面非常像 Notion 风格，手机端适配极好，非常适合放入你的投资文章。
+
+GitHub 地址：https://github.com/chaitin/astro-blog (或者搜索 Astro Nano 中文版)
+
+特点：
+
+全中文配置：日期显示为“2026年4月15日”，而不是英文。
+
+极简流畅：在手机上滑动非常顺滑。
+
+自带搜索：方便你以后文章多了找内容。
+
+2. 推荐模版：Astro Theme Cactus (中文化支持)
+这是一个硬核、极简的模版，很多金融和技术博主都在用。
+
+GitHub 地址：https://github.com/chrismwilliams/astro-theme-cactus
+
+特点：
+
+卡片式布局：放工具链接非常漂亮。
+
+SEO 友好：容易被百度/谷歌搜到。
+
+虽然是英文开发，但它在 src/site.config.ts 里改一个字就能全站变中文，且国内有很多中文克隆版。
+
+如何快速换成这些中文模版？（手把手）
+既然你已经学会了如何在 Cloudflare 部署，换模版只需要 3 分钟：
+
+在 GitHub 上“点个赞”：
+打开上面的 GitHub 链接，点击右上角的 "Fork"（这相当于把这个中文模版复制一份到你自己的账号下）。
+
+回到 Cloudflare Pages：
+
+点击“创建项目” -> “连接到 Git”。
+
+这次选择你刚刚 Fork 的那个新项目（比如 astro-blog）。
+
+重新配置并部署：
+
+框架预设依然选 Astro。
+
+点击部署。
+
+改域名绑定：
+
+把你的 dybrain.com 从旧项目上解绑，绑定到这个新项目上。
+
+AI 的真心建议：
+如果你追求的是像 wise-invest.org 那种导航感强、工具多的布局，我建议你搜索：
+
+Astro Navigation Template Chinese
+
+或者，如果你觉得找模版还是麻烦，你可以把你想在首页显示的中文名字、简介告诉我，我直接给你写一段代码，你粘贴到你现在那个项目的 src/pages/index.astro 里，瞬间就能变全中文。
+
+你想试试自己 Fork 一个新模版，还是让我帮你改现有的？
+
+我如何找到我的网页代码，我想发给claude，让他帮我修改成中文
+
+既然你已经通过 Cloudflare 的官方模版完成了部署，你的网页代码现在正安安全全地存放在你的 GitHub 账户里。
+
+要把代码发给 Claude（或者我）来修改，你不需要下载任何软件，直接在网页上操作即可。以下是找到并提取代码的步骤：
+
+第一步：在 GitHub 找到你的代码库
+登录你的 GitHub 账号。
+
+点击页面左上角的头像，或者在左侧列表里找到你刚才创建的项目，名字应该是 dybrain-astro（或者是你之前改的其他名字）。
+
+点击进入这个项目，你会看到一堆文件夹（如 public、src）和文件。
+
+第二步：确定要修改的核心文件
+如果你想把网页改写成中文，最关键的文件通常就在 src 文件夹里。你可以重点找这三个地方：
+
+首页内容：src/pages/index.astro（这是你网站首页的代码）。
+
+网站配置（标题、描述等）：src/consts.ts 或 src/site.config.ts。
+
+网页框架（导航栏、页脚）：src/components/Header.astro 或 src/layouts/Layout.astro。
+
+第三步：如何把代码发给 Claude
+你有两种简单的方法：
+
+方法 A：直接复制代码文字（最推荐，最快）
+在 GitHub 里点击进入某个文件（比如 index.astro）。
+
+你会看到代码。点击代码框右上角的 “复制”图标（两张小纸片的形状）。
+
+回到对话框，直接粘贴给 Claude，并说：“这是我 Astro 网站的首页代码，请帮我把里面的英文内容全部翻译成地道的中文，并保持代码结构不变。”
+
+方法 B：截图发给 Claude（适合询问“这是什么意思”）
+如果你不敢乱动代码，可以把 GitHub 上的代码截个屏发过来，Claude 会告诉你哪一行是控制标题的，哪一行是控制按钮的。
+
+特别提醒：让修改生效的“最后一步”
+当 Claude 帮你写好了中文版的代码后：
+
+回到 GitHub 该文件的页面，点击右上角的 “小铅笔”图标（编辑）。
+
+把里面的旧代码全选删除，粘贴 Claude 给你的新代码。
+
+点击最下方的绿色按钮 “Commit changes”。
+
+等 1 分钟，刷新你的手机浏览器，你的网站就变中文了！
+
+现在，你可以先去 GitHub 找到 src/pages/index.astro 这个文件，把代码复制粘贴给我，我直接帮你完成第一波“中文化”！
+
+---
+
+import Layout from '~/layouts/PageLayout.astro';
+
+
+
+import Hero from '~/components/widgets/Hero.astro';
+
+import Note from '~/components/widgets/Note.astro';
+
+import Features from '~/components/widgets/Features.astro';
+
+import Features2 from '~/components/widgets/Features2.astro';
+
+import Steps from '~/components/widgets/Steps.astro';
+
+import Content from '~/components/widgets/Content.astro';
+
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+
+import FAQs from '~/components/widgets/FAQs.astro';
+
+import Stats from '~/components/widgets/Stats.astro';
+
+import CallToAction from '~/components/widgets/CallToAction.astro';
+
+
+
+const metadata = {
+
+  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+
+  ignoreTitleTemplate: true,
+
+};
+
+---
+
+
+
+<Layout metadata={metadata}>
+
+  <!-- Hero Widget ******************* -->
+
+
+
+  <Hero
+
+    actions={[
+
+      {
+
+        variant: 'primary',
+
+        text: 'Get template',
+
+        href: 'https://github.com/arthelokyo/astrowind',
+
+        target: '_blank',
+
+        icon: 'tabler:download',
+
+      },
+
+      { text: 'Learn more', href: '#features' },
+
+    ]}
+
+    image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
+
+  >
+
+    <Fragment slot="title">
+
+      Free template for <span class="hidden xl:inline">creating websites with</span>
+
+      <span class="text-accent dark:text-white"> Astro 5.0</span> + Tailwind CSS
+
+    </Fragment>
+
+
+
+    <Fragment slot="subtitle">
+
+      <span class="hidden sm:inline">
+
+        <span class="font-semibold">AstroWind</span> is a free, customizable and production-ready template for Astro 5.0
+
+        + Tailwind CSS.</span
+
+      >
+
+      <span class="block mb-1 sm:hidden font-bold text-blue-600">AstroWind: Production-ready.</span>
+
+      Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages &
+
+      Blogs.
+
+    </Fragment>
+
+  </Hero>
+
+
+
+  <!-- Note Widget ******************* -->
+
+
+
+  <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
+
+
+
+  <!-- Features Widget *************** -->
+
+
+
+  <Features
+
+    id="features"
+
+    tagline="Features"
+
+    title="What you get with AstroWind"
+
+    subtitle="One of the most professional and comprehensive templates currently on the market. Most starred & forked Astro theme in 2022, 2023 and 2024."
+
+    items={[
+
+      {
+
+        title: 'Astro + Tailwind CSS Integration',
+
+        description:
+
+          'A seamless integration between two great frameworks that offer high productivity, performance and versatility.',
+
+        icon: 'tabler:brand-tailwind',
+
+      },
+
+      {
+
+        title: 'Ready-to-use Components',
+
+        description:
+
+          'Widgets made with Tailwind CSS ready to be used in Marketing Websites, SaaS, Blogs, Personal Profiles, Small Business...',
+
+        icon: 'tabler:components',
+
+      },
+
+      {
+
+        title: 'Best Practices',
+
+        description:
+
+          'Creating secure, efficient, and user-friendly websites that deliver exceptional experiences and lasting value.',
+
+        icon: 'tabler:list-check',
+
+      },
+
+      {
+
+        title: 'Excellent Page Speed',
+
+        description:
+
+          'Having a good page speed impacts organic search ranking, improves user experience (UI/UX) and increase conversion rates.',
+
+        icon: 'tabler:rocket',
+
+      },
+
+      {
+
+        title: 'Search Engine Optimization (SEO)',
+
+        description:
+
+          "SEO lies in its ability to enhance a website's visibility, driving organic traffic and enabling it to reach a wider audience.",
+
+        icon: 'tabler:arrows-right-left',
+
+      },
+
+      {
+
+        title: 'Open to new ideas and contributions',
+
+        description:
+
+          'Embracing a culture that is open to new ideas and contributions is integral fostering innovation, collaboration, and a dynamic user experience.',
+
+        icon: 'tabler:bulb',
+
+      },
+
+    ]}
+
+  />
+
+
+
+  <!-- Content Widget **************** -->
+
+
+
+  <Content
+
+    isReversed
+
+    tagline="Inside template"
+
+    title="AstroWind's Blueprint: Fun Meets Functionality!"
+
+    items={[
+
+      {
+
+        title: 'Built on top of Astro 5.0',
+
+        description:
+
+          'Benefiting from the performance and developer-friendly features of this modern static site generator.',
+
+      },
+
+      {
+
+        title: 'Styled using Tailwind CSS',
+
+        description:
+
+          'Facilitating rapid design and consistent styling with this highly popular utility-first CSS framework.',
+
+      },
+
+      {
+
+        title: 'Cross-browser compatibility',
+
+        description:
+
+          'Ensure your website looks and functions consistently across various web browsers, delivering a seamless experience to all users.',
+
+      },
+
+    ]}
+
+    image={{
+
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+
+      alt: 'Colorful Image',
+
+    }}
+
+  >
+
+    <Fragment slot="content">
+
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Building on modern foundations</h3>
+
+      Gain a competitive advantage by incorporating industry leading practices
+
+    </Fragment>
+
+
+
+    <Fragment slot="bg">
+
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+
+    </Fragment>
+
+  </Content>
+
+
+
+  <!-- Content Widget **************** -->
+
+
+
+  <Content
+
+    isAfterContent
+
+    items={[
+
+      {
+
+        title: 'High level of customization',
+
+        description: `Tailor the template effortlessly to match your brand's identity and requirements, making your website distinct and saving you time.`,
+
+      },
+
+      {
+
+        title: 'Multiple layout possibilities',
+
+        description:
+
+          'Explore various layout options to find the structure that best presents your content, enhancing user engagement and navigation.',
+
+      },
+
+      {
+
+        title: 'Fully responsive design',
+
+        description:
+
+          "Ensure your website's optimal performance on various devices and screen sizes, providing a consistent and enjoyable user experience.",
+
+      },
+
+      {
+
+        title: 'Integration of media',
+
+        description:
+
+          'Seamlessly incorporate images, videos, and multimedia elements that enhance your content and engage visitors effectively.',
+
+      },
+
+    ]}
+
+    image={{
+
+      src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2194&q=80',
+
+      alt: 'Blueprint Image',
+
+    }}
+
+  >
+
+    <Fragment slot="content">Ensure your online presence truly represents you.</Fragment>
+
+
+
+    <Fragment slot="bg">
+
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+
+    </Fragment>
+
+  </Content>
+
+
+
+  <!-- Content Widget **************** -->
+
+
+
+  <Content
+
+    isReversed
+
+    isAfterContent
+
+    items={[
+
+      {
+
+        title: 'Enhanced user engagement',
+
+        description:
+
+          'Captivate your audience with interactive elements, intuitive navigation, and visually appealing layouts, encouraging longer visits.',
+
+      },
+
+      {
+
+        title: 'Continuous improvement',
+
+        description:
+
+          'Ensure your website stays aligned with the latest trends and technologies through regular updates and enhancements.',
+
+      },
+
+      {
+
+        title: 'Time and resource efficiency',
+
+        description:
+
+          'Skip the time-consuming process of building a website from scratch and launch your online presence sooner with AstroWind.',
+
+      },
+
+      {
+
+        title: 'Community support',
+
+        description: `Join the growing AstroWind community for insights, resources, and assistance, ensuring you're never alone on your web development journey.`,
+
+      },
+
+    ]}
+
+    image={{
+
+      src: 'https://images.unsplash.com/photo-1611462985358-60d3498e0364?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+
+      alt: 'Astronauts Image',
+
+    }}
+
+  >
+
+    <Fragment slot="content">Designed to foster growth and success.</Fragment>
+
+
+
+    <Fragment slot="bg">
+
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+
+    </Fragment>
+
+  </Content>
+
+
+
+  <!-- Steps Widget ****************** -->
+
+
+
+  <Steps
+
+    title="Get your dream website up and running in no time with AstroWind."
+
+    items={[
+
+      {
+
+        title: 'Step 1: <span class="font-medium">Download</span>',
+
+        description:
+
+          "Kickstart with GitHub! Either fork the AstroWind template or simply click 'Use this template'. Your canvas awaits, ready for your digital masterpiece. In just a few clicks, you've already set the foundation.",
+
+        icon: 'tabler:package',
+
+      },
+
+      {
+
+        title: 'Step 2: <span class="font-medium">Add content</span>',
+
+        description:
+
+          "Pour your vision into it. Add images, text, and all that jazz to breathe life into your digital space. Remember, it's the content that tells your story, so make it captivating.",
+
+        icon: 'tabler:letter-case',
+
+      },
+
+      {
+
+        title: 'Step 3: <span class="font-medium">Customize styles</span>',
+
+        description:
+
+          'Give it your personal touch. Tailor colors, fonts, and layouts until it feels just right. Your unique flair, amplified by AstroWind! Precision in design ensures a seamless user experience.',
+
+        icon: 'tabler:paint',
+
+      },
+
+      {
+
+        title: 'Ready!',
+
+        icon: 'tabler:check',
+
+      },
+
+    ]}
+
+    image={{
+
+      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+
+      alt: 'Steps image',
+
+    }}
+
+  />
+
+
+
+  <!-- Features2 Widget ************** -->
+
+
+
+  <Features2
+
+    title="Most used widgets"
+
+    subtitle="Provides frequently used components for building websites using Tailwind CSS"
+
+    tagline="Components"
+
+    items={[
+
+      {
+
+        title: 'Headers',
+
+        description: "Ever tried driving without GPS? Boom! That's why websites need headers for direction.",
+
+        icon: 'flat-color-icons:template',
+
+      },
+
+      {
+
+        title: 'Heros',
+
+        description:
+
+          "Picture a superhero landing – epic, right? That's the job of a Hero section, making grand entrances!",
+
+        icon: 'flat-color-icons:gallery',
+
+      },
+
+      {
+
+        title: 'Features',
+
+        description:
+
+          'Where websites strut their stuff and show off superpowers. No holding back on the bragging rights here!',
+
+        icon: 'flat-color-icons:approval',
+
+      },
+
+      {
+
+        title: 'Content',
+
+        description:
+
+          "Dive into the meat and potatoes of a site; without it, you'd just be window shopping. Content is king.",
+
+        icon: 'flat-color-icons:document',
+
+      },
+
+      {
+
+        title: 'Call-to-Action',
+
+        description:
+
+          'That enthusiastic friend who\'s always urging, "Do it! Do it!"? Yeah, that\'s this button nudging you towards adventure.',
+
+        icon: 'flat-color-icons:advertising',
+
+      },
+
+      {
+
+        title: 'Pricing',
+
+        description: 'Behold the dessert menu of the website world. Tempting choices await, can you resist?',
+
+        icon: 'flat-color-icons:currency-exchange',
+
+      },
+
+      {
+
+        title: 'Testimonial',
+
+        description: 'Step into the gossip corner! Here, other visitors spill the beans and share the juicy details.',
+
+        icon: 'flat-color-icons:voice-presentation',
+
+      },
+
+      {
+
+        title: 'Contact',
+
+        description:
+
+          'Like a digital mailbox, but faster! Drop a line, ask a question, or send a virtual high-five. Ding! Message in.',
+
+        icon: 'flat-color-icons:business-contact',
+
+      },
+
+      {
+
+        title: 'Footers',
+
+        description: "The footer's like the credits of a movie but sprinkled with easter eggs. Time to hunt!",
+
+        icon: 'flat-color-icons:database',
+
+      },
+
+    ]}
+
+  >
+
+    <Fragment slot="bg">
+
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+
+    </Fragment>
+
+  </Features2>
+
+
+
+  <!-- HighlightedPosts Widget ******* -->
+
+
+
+  <BlogLatestPosts
+
+    title="Find out more content in our Blog"
+
+    information={`The blog is used to display AstroWind documentation.
+
+                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
+
+                        Astro is a very interesting technology. Thanks.
+
+                `}
+
+  />
+
+
+
+  <!-- FAQs Widget ******************* -->
+
+
+
+  <FAQs
+
+    title="Frequently Asked Questions"
+
+    subtitle="Dive into the following questions to gain insights into the powerful features that AstroWind offers and how it can elevate your web development journey."
+
+    tagline="FAQs"
+
+    classes={{ container: 'max-w-6xl' }}
+
+    items={[
+
+      {
+
+        title: 'Why AstroWind?',
+
+        description:
+
+          "Michael Knight a young loner on a crusade to champion the cause of the innocent. The helpless. The powerless in a world of criminals who operate above the law. Here he comes Here comes Speed Racer. He's a demon on wheels.",
+
+      },
+
+      {
+
+        title: 'What do I need to start?',
+
+        description:
+
+          'Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds. Many say exploration is part of our destiny, but it’s actually our duty to future generations.',
+
+      },
+
+      {
+
+        title: 'How to install the Astro + Tailwind CSS template?',
+
+        description:
+
+          "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows.",
+
+      },
+
+      {
+
+        title: "What's something that you don't understand?",
+
+        description:
+
+          "A flower in my garden, a mystery in my panties. Heart attack never stopped old Big Bear. I didn't even know we were calling him Big Bear.",
+
+      },
+
+      {
+
+        title: 'What is something that you would like to try again?',
+
+        description:
+
+          "A business big enough that it could be listed on the NASDAQ goes belly up. Disappears! It ceases to exist without me. No, you clearly don't know who you're talking to, so let me clue you in.",
+
+      },
+
+      {
+
+        title: 'If you could only ask one question to each person you meet, what would that question be?',
+
+        description:
+
+          "This is not about revenge. This is about justice. A lot of things can change in twelve years, Admiral. Well, that's certainly good to know. About four years. I got tired of hearing how young I looked.",
+
+      },
+
+    ]}
+
+  />
+
+
+
+  <!-- Stats Widget ****************** -->
+
+
+
+  <Stats
+
+    stats={[
+
+      { title: 'Downloads', amount: '132K' },
+
+      { title: 'Stars', amount: '24.8K' },
+
+      { title: 'Forks', amount: '10.3K' },
+
+      { title: 'Users', amount: '48.4K' },
+
+    ]}
+
+  />
+
+
+
+  <!-- CallToAction Widget *********** -->
+
+
+
+  <CallToAction
+
+    actions={[
+
+      {
+
+        variant: 'primary',
+
+        text: 'Get template',
+
+        href: 'https://github.com/arthelokyo/astrowind',
+
+        target: '_blank',
+
+        icon: 'tabler:download',
+
+      },
+
+    ]}
+
+  >
+
+    <Fragment slot="title">
+
+      Astro&nbsp;+&nbsp;<br class="block sm:hidden" /><span class="sm:whitespace-nowrap">Tailwind CSS</span>
+
+    </Fragment>
+
+
+
+    <Fragment slot="subtitle">
+
+      Be very surprised by these huge fake numbers you are seeing on this page. <br class="hidden md:inline" />Don't
+
+      waste more time! :P
+
+    </Fragment>
+
+  </CallToAction>
+
+</Layout>
+
+既然你已经把代码拿到了，接下来的事情就简单了！
+
+这段代码是你网站的“首页门面”。为了让它符合你“数字大脑”和投资博主的身份，我帮你把这段复杂的英文代码翻译成了地道的中文，并把内容调整得更贴合你的实际情况（比如加入了投资、期权和知识管理的元素）。
+
+你可以直接全选并覆盖掉你 src/pages/index.astro 里的原代码：
+
+修改后的中文版代码
+代码段
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
@@ -13,387 +1764,225 @@ import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  title: 'Dybrain — 我的数字大脑与投资笔记',
   ignoreTitleTemplate: true,
 };
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero Widget ******************* -->
-
   <Hero
     actions={[
       {
         variant: 'primary',
-        text: 'Get template',
-        href: 'https://github.com/arthelokyo/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
+        text: '查看投资笔记',
+        href: '/blog',
+        icon: 'tabler:book',
       },
-      { text: 'Learn more', href: '#features' },
+      { text: '了解更多', href: '#features' },
     ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
+    image={{ src: '~/assets/images/hero-image.png', alt: 'Dybrain 首页图片' }}
   >
     <Fragment slot="title">
-      Free template for <span class="hidden xl:inline">creating websites with</span>
-      <span class="text-accent dark:text-white"> Astro 5.0</span> + Tailwind CSS
+      欢迎来到 <span class="text-accent dark:text-white">Dybrain</span>
+      <br />
+      <span class="text-3xl">记录投资、技术与成长的数字大脑</span>
     </Fragment>
 
     <Fragment slot="subtitle">
       <span class="hidden sm:inline">
-        <span class="font-semibold">AstroWind</span> is a free, customizable and production-ready template for Astro 5.0
-        + Tailwind CSS.</span
+        这里是我分享 <span class="font-semibold">美股期权策略</span>、<span class="font-semibold">AI 编程实践</span> 以及个人知识管理的私人领地。</span
       >
-      <span class="block mb-1 sm:hidden font-bold text-blue-600">AstroWind: Production-ready.</span>
-      Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages &
-      Blogs.
+      <span class="block mb-1 sm:hidden font-bold text-blue-600">Dybrain：思考，沉淀，进化。</span>
+      致力于通过数据驱动投资，用 AI 加速学习。
     </Fragment>
   </Hero>
 
-  <!-- Note Widget ******************* -->
-
-  <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
-
-  <!-- Features Widget *************** -->
+  <Note title="核心理念:" description="长期主义、数据驱动、持续进化" />
 
   <Features
     id="features"
-    tagline="Features"
-    title="What you get with AstroWind"
-    subtitle="One of the most professional and comprehensive templates currently on the market. Most starred & forked Astro theme in 2022, 2023 and 2024."
+    tagline="核心板块"
+    title="你在这里能看到什么"
+    subtitle="深度聚焦金融投资与前沿技术，打造结构化的知识体系。"
     items={[
       {
-        title: 'Astro + Tailwind CSS Integration',
+        title: '美股与期权实战',
         description:
-          'A seamless integration between two great frameworks that offer high productivity, performance and versatility.',
-        icon: 'tabler:brand-tailwind',
+          '分享 Sell Put、轮转策略（Wheel Strategy）以及美股大盘的技术面深度分析。',
+        icon: 'tabler:trending-up',
       },
       {
-        title: 'Ready-to-use Components',
+        title: 'AI 与 Vibe Coding',
         description:
-          'Widgets made with Tailwind CSS ready to be used in Marketing Websites, SaaS, Blogs, Personal Profiles, Small Business...',
-        icon: 'tabler:components',
+          '探索如何利用 Cursor、Trae 等 AI 工具快速构建金融数据扫描器和自动化脚本。',
+        icon: 'tabler:cpu',
       },
       {
-        title: 'Best Practices',
+        title: '个人知识管理',
         description:
-          'Creating secure, efficient, and user-friendly websites that deliver exceptional experiences and lasting value.',
-        icon: 'tabler:list-check',
+          '基于 Obsidian 和 Astro 构建的第二大脑，将碎片化信息转化为结构化知识。',
+        icon: 'tabler:brain',
       },
       {
-        title: 'Excellent Page Speed',
+        title: '全球化金融工具',
         description:
-          'Having a good page speed impacts organic search ranking, improves user experience (UI/UX) and increase conversion rates.',
-        icon: 'tabler:rocket',
+          '涉及 Wise、Schwab 等海外金融工具的使用心得与入金指南。',
+        icon: 'tabler:world',
       },
       {
-        title: 'Search Engine Optimization (SEO)',
+        title: '数据监控与预警',
         description:
-          "SEO lies in its ability to enhance a website's visibility, driving organic traffic and enabling it to reach a wider audience.",
-        icon: 'tabler:arrows-right-left',
+          "实时跟踪标普500、比特币以及核心持仓的波动情况。",
+        icon: 'tabler:device-analytics',
       },
       {
-        title: 'Open to new ideas and contributions',
+        title: '开源与交流',
         description:
-          'Embracing a culture that is open to new ideas and contributions is integral fostering innovation, collaboration, and a dynamic user experience.',
-        icon: 'tabler:bulb',
+          '拥抱开源文化，分享网站搭建教程与代码，与同道中人共同进步。',
+        icon: 'tabler:message-circle',
       },
     ]}
   />
 
-  <!-- Content Widget **************** -->
-
   <Content
     isReversed
-    tagline="Inside template"
-    title="AstroWind's Blueprint: Fun Meets Functionality!"
+    tagline="投资笔记"
+    title="逻辑支撑：用数据和理性投资"
     items={[
       {
-        title: 'Built on top of Astro 5.0',
+        title: '量化模型支持',
         description:
-          'Benefiting from the performance and developer-friendly features of this modern static site generator.',
+          '利用 Python 脚本自动计算期权年化收益率，筛选高胜率机会。',
       },
       {
-        title: 'Styled using Tailwind CSS',
+        title: '跨市场视野',
         description:
-          'Facilitating rapid design and consistent styling with this highly popular utility-first CSS framework.',
+          '同时关注加密货币、美股与宏观经济指标，构建全方位的资产防御体系。',
       },
       {
-        title: 'Cross-browser compatibility',
+        title: '极简体验',
         description:
-          'Ensure your website looks and functions consistently across various web browsers, delivering a seamless experience to all users.',
+          '网页端与手机端完美适配，随时随地查阅核心策略与历史数据。',
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: 'Colorful Image',
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      alt: '投资分析图片',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Building on modern foundations</h3>
-      Gain a competitive advantage by incorporating industry leading practices
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">建立现代化的投资框架</h3>
+      通过技术手段降低情绪干扰，把握确定性机会。
     </Fragment>
 
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
   </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isAfterContent
-    items={[
-      {
-        title: 'High level of customization',
-        description: `Tailor the template effortlessly to match your brand's identity and requirements, making your website distinct and saving you time.`,
-      },
-      {
-        title: 'Multiple layout possibilities',
-        description:
-          'Explore various layout options to find the structure that best presents your content, enhancing user engagement and navigation.',
-      },
-      {
-        title: 'Fully responsive design',
-        description:
-          "Ensure your website's optimal performance on various devices and screen sizes, providing a consistent and enjoyable user experience.",
-      },
-      {
-        title: 'Integration of media',
-        description:
-          'Seamlessly incorporate images, videos, and multimedia elements that enhance your content and engage visitors effectively.',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2194&q=80',
-      alt: 'Blueprint Image',
-    }}
-  >
-    <Fragment slot="content">Ensure your online presence truly represents you.</Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent
-    items={[
-      {
-        title: 'Enhanced user engagement',
-        description:
-          'Captivate your audience with interactive elements, intuitive navigation, and visually appealing layouts, encouraging longer visits.',
-      },
-      {
-        title: 'Continuous improvement',
-        description:
-          'Ensure your website stays aligned with the latest trends and technologies through regular updates and enhancements.',
-      },
-      {
-        title: 'Time and resource efficiency',
-        description:
-          'Skip the time-consuming process of building a website from scratch and launch your online presence sooner with AstroWind.',
-      },
-      {
-        title: 'Community support',
-        description: `Join the growing AstroWind community for insights, resources, and assistance, ensuring you're never alone on your web development journey.`,
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1611462985358-60d3498e0364?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: 'Astronauts Image',
-    }}
-  >
-    <Fragment slot="content">Designed to foster growth and success.</Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Steps Widget ****************** -->
 
   <Steps
-    title="Get your dream website up and running in no time with AstroWind."
+    title="如何快速上手我的投资策略？"
     items={[
       {
-        title: 'Step 1: <span class="font-medium">Download</span>',
+        title: '第一步：<span class="font-medium">建立基础认知</span>',
         description:
-          "Kickstart with GitHub! Either fork the AstroWind template or simply click 'Use this template'. Your canvas awaits, ready for your digital masterpiece. In just a few clicks, you've already set the foundation.",
+          "阅读我的基础教程，了解现金担保看跌期权（Cash-Secured Puts）的基本逻辑与风险。这是我们“收租”生涯的起点。",
         icon: 'tabler:package',
       },
       {
-        title: 'Step 2: <span class="font-medium">Add content</span>',
+        title: '第二步：<span class="font-medium">配置工具链</span>',
         description:
-          "Pour your vision into it. Add images, text, and all that jazz to breathe life into your digital space. Remember, it's the content that tells your story, so make it captivating.",
+          "工欲善其事，必先利其器。参考我的指南配置好 Schwab、Wise 以及 Python 自动化环境。",
         icon: 'tabler:letter-case',
       },
       {
-        title: 'Step 3: <span class="font-medium">Customize styles</span>',
+        title: '第三步：<span class="font-medium">持续实盘复盘</span>',
         description:
-          'Give it your personal touch. Tailor colors, fonts, and layouts until it feels just right. Your unique flair, amplified by AstroWind! Precision in design ensures a seamless user experience.',
+          '在我的博客中查看最新的实盘记录，跟随市场波动不断调整参数，优化收益曲线。',
         icon: 'tabler:paint',
       },
       {
-        title: 'Ready!',
+        title: '准备就绪！',
         icon: 'tabler:check',
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-      alt: 'Steps image',
+      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80',
+      alt: '步骤图片',
     }}
   />
 
-  <!-- Features2 Widget ************** -->
-
-  <Features2
-    title="Most used widgets"
-    subtitle="Provides frequently used components for building websites using Tailwind CSS"
-    tagline="Components"
-    items={[
-      {
-        title: 'Headers',
-        description: "Ever tried driving without GPS? Boom! That's why websites need headers for direction.",
-        icon: 'flat-color-icons:template',
-      },
-      {
-        title: 'Heros',
-        description:
-          "Picture a superhero landing – epic, right? That's the job of a Hero section, making grand entrances!",
-        icon: 'flat-color-icons:gallery',
-      },
-      {
-        title: 'Features',
-        description:
-          'Where websites strut their stuff and show off superpowers. No holding back on the bragging rights here!',
-        icon: 'flat-color-icons:approval',
-      },
-      {
-        title: 'Content',
-        description:
-          "Dive into the meat and potatoes of a site; without it, you'd just be window shopping. Content is king.",
-        icon: 'flat-color-icons:document',
-      },
-      {
-        title: 'Call-to-Action',
-        description:
-          'That enthusiastic friend who\'s always urging, "Do it! Do it!"? Yeah, that\'s this button nudging you towards adventure.',
-        icon: 'flat-color-icons:advertising',
-      },
-      {
-        title: 'Pricing',
-        description: 'Behold the dessert menu of the website world. Tempting choices await, can you resist?',
-        icon: 'flat-color-icons:currency-exchange',
-      },
-      {
-        title: 'Testimonial',
-        description: 'Step into the gossip corner! Here, other visitors spill the beans and share the juicy details.',
-        icon: 'flat-color-icons:voice-presentation',
-      },
-      {
-        title: 'Contact',
-        description:
-          'Like a digital mailbox, but faster! Drop a line, ask a question, or send a virtual high-five. Ding! Message in.',
-        icon: 'flat-color-icons:business-contact',
-      },
-      {
-        title: 'Footers',
-        description: "The footer's like the credits of a movie but sprinkled with easter eggs. Time to hunt!",
-        icon: 'flat-color-icons:database',
-      },
-    ]}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Features2>
-
-  <!-- HighlightedPosts Widget ******* -->
-
-  <BlogLatestPosts
-    title="Find out more content in our Blog"
-    information={`The blog is used to display AstroWind documentation.
-                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
-                        Astro is a very interesting technology. Thanks.
-                `}
-  />
-
-  <!-- FAQs Widget ******************* -->
-
   <FAQs
-    title="Frequently Asked Questions"
-    subtitle="Dive into the following questions to gain insights into the powerful features that AstroWind offers and how it can elevate your web development journey."
+    title="常见问题"
+    subtitle="关于 Dybrain 和我的投资思路的一些快速解答。"
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
     items={[
       {
-        title: 'Why AstroWind?',
+        title: '为什么要建立这个网站？',
         description:
-          "Michael Knight a young loner on a crusade to champion the cause of the innocent. The helpless. The powerless in a world of criminals who operate above the law. Here he comes Here comes Speed Racer. He's a demon on wheels.",
+          "写作是最好的思考。通过把复杂的投资逻辑写出来，我能更清晰地审视自己的决策。同时也希望以此结识志同道合的朋友。",
       },
       {
-        title: 'What do I need to start?',
+        title: '这里的建议可以作为投资依据吗？',
         description:
-          'Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds. Many say exploration is part of our destiny, but it’s actually our duty to future generations.',
+          '绝对不可以。所有内容仅作为个人学习记录。投资有风险，入市需谨慎。你应该根据自己的风险承受能力做决策。',
       },
       {
-        title: 'How to install the Astro + Tailwind CSS template?',
+        title: '网站是用什么搭建的？',
         description:
-          "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows.",
-      },
-      {
-        title: "What's something that you don't understand?",
-        description:
-          "A flower in my garden, a mystery in my panties. Heart attack never stopped old Big Bear. I didn't even know we were calling him Big Bear.",
-      },
-      {
-        title: 'What is something that you would like to try again?',
-        description:
-          "A business big enough that it could be listed on the NASDAQ goes belly up. Disappears! It ceases to exist without me. No, you clearly don't know who you're talking to, so let me clue you in.",
-      },
-      {
-        title: 'If you could only ask one question to each person you meet, what would that question be?',
-        description:
-          "This is not about revenge. This is about justice. A lot of things can change in twelve years, Admiral. Well, that's certainly good to know. About four years. I got tired of hearing how young I looked.",
+          "使用 Astro 5.0 + Tailwind CSS 搭建，托管在 Cloudflare Pages。如果你也感兴趣，可以参考我的搭建教程。",
       },
     ]}
   />
 
-  <!-- Stats Widget ****************** -->
-
-  <Stats
-    stats={[
-      { title: 'Downloads', amount: '132K' },
-      { title: 'Stars', amount: '24.8K' },
-      { title: 'Forks', amount: '10.3K' },
-      { title: 'Users', amount: '48.4K' },
-    ]}
+  <BlogLatestPosts
+    title="最新发布"
+    information={`在这里你可以找到我最近的思考。
+                每一篇笔记都是我在投资路上的一个脚印，
+                希望能给你带来一点点启发。
+                `}
   />
-
-  <!-- CallToAction Widget *********** -->
 
   <CallToAction
     actions={[
       {
         variant: 'primary',
-        text: 'Get template',
-        href: 'https://github.com/arthelokyo/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
+        text: '开始阅读',
+        href: '/blog',
+        icon: 'tabler:arrow-right',
       },
     ]}
   >
     <Fragment slot="title">
-      Astro&nbsp;+&nbsp;<br class="block sm:hidden" /><span class="sm:whitespace-nowrap">Tailwind CSS</span>
+      订阅我的&nbsp;<br class="block sm:hidden" /><span class="sm:whitespace-nowrap">投资随笔</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      Be very surprised by these huge fake numbers you are seeing on this page. <br class="hidden md:inline" />Don't
-      waste more time! :P
+      不定期分享市场洞察与技术实践。<br class="hidden md:inline" />让我们在复利的道路上慢慢变富。
     </Fragment>
   </CallToAction>
 </Layout>
+如何让这段代码生效？
+打开你的 GitHub，找到 src/pages/index.astro 文件。
+
+点击右上角的 “小铅笔”图标 进行编辑。
+
+删掉里面原来的所有内容（可以用 Ctrl+A 然后 Backspace）。
+
+把上面我写给你的这一大段代码复制粘贴进去。
+
+点击页面最下方的绿色按钮 “Commit changes”。
+
+等 1 分钟，刷新你的网站。
+
+瞧！你的网站首页现在不仅变成了中文，连内容都充满了“金融和技术”的高端质感。
+
+接下来，你还想修改哪个页面？或者是想在某个板块加上你的二维码/社交链接？
+
+
+
+
+
+Gemini 是一款 AI 工具，其回答未必正确无误。
+
