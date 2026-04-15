@@ -3,11 +3,6 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Features from '~/components/widgets/Features.astro';
-import Content from '~/components/widgets/Content.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
@@ -18,7 +13,7 @@ const metadata = {
 <Layout metadata={metadata}>
   <Hero
     actions={[
-      { variant: 'primary', text: '进入 GitHub', href: 'https://github.com/lengyu1991', target: '_blank' }
+      { variant: 'primary', text: '进入项目', href: 'https://github.com/lengyu1991', target: '_blank' }
     ]}
     image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: 'Hero Image' }}
   >
@@ -35,36 +30,11 @@ const metadata = {
   <Features
     title="本站功能"
     items={[
-      { title: '文章笔记', description: '个人原创与精选转载。', icon: 'tabler:notebook' },
-      { title: '工具导航', description: '优质工具与资源汇总。', icon: 'tabler:tools' },
-      { title: '持续迭代', description: '后续将接入量化与期权数据。', icon: 'tabler:bulb' }
+      { title: '文章笔记', description: '记录思考，分享知识。', icon: 'tabler:notebook' },
+      { title: '工具导航', description: '优质资源，一站直达。', icon: 'tabler:tools' },
+      { title: '持续迭代', description: '量化策略与期权数据。', icon: 'tabler:bulb' }
     ]}
   />
-
-  <Content
-    title="关于内容"
-    image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: 'Content Image' }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold mb-2">坚持内容驱动</h3>
-      用现代技术，记录每一个思考瞬间。
-    </Fragment>
-  </Content>
-
-  <Steps
-    title="三步开启"
-    items={[
-      { title: 'Step 1: 访问', description: '打开 dybrain.com', icon: 'tabler:package' },
-      { title: 'Step 2: 阅读', description: '寻找你需要的知识', icon: 'tabler:letter-case' },
-      { title: 'Step 3: 交流', description: '通过底部联系方式沟通', icon: 'tabler:check' }
-    ]}
-  />
-
-  <BlogLatestPosts title="最新文章" />
-
-  <FAQs title="常见问题" items={[{ title: '支持手机吗？', description: '完全支持响应式浏览。' }]} />
-
-  <Stats stats={[{ title: '原创文章', amount: '持续更新' }, { title: '工具导航', amount: '100+' }]} />
 
   <CallToAction
     title="即刻收藏"
