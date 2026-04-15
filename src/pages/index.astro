@@ -19,8 +19,6 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero Widget ******************* -->
-
   <Hero
     actions={[
       {
@@ -32,7 +30,7 @@ const metadata = {
       },
       { text: '了解更多', href: '#features' },
     ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: '网站首页图' }}
+    image={{ src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2070&q=80', alt: '网站首页图' }}
   >
     <Fragment slot="title">
       用 <span class="hidden xl:inline">现代技术打造</span>
@@ -48,11 +46,7 @@ const metadata = {
     </Fragment>
   </Hero>
 
-  <!-- Note Widget ******************* -->
-
   <Note title="理念：" description="简洁至上、注重体验、持续更新" />
-
-  <!-- Features Widget *************** -->
 
   <Features
     id="features"
@@ -62,44 +56,36 @@ const metadata = {
     items={[
       {
         title: '文章与笔记',
-        description:
-          '收录个人原创笔记与精选转载文章，分类清晰，方便检索与阅读。',
+        description: '收录个人原创笔记与精选转载文章，分类清晰，方便检索与阅读。',
         icon: 'tabler:notebook',
       },
       {
         title: '工具导航',
-        description:
-          '汇聚常用优质工具与网站链接，一站式找到你需要的资源。',
+        description: '汇聚常用优质工具与网站链接，一站式找到你需要的资源。',
         icon: 'tabler:tools',
       },
       {
         title: '自制工具',
-        description:
-          '持续上线自己开发的实用小工具，解决实际问题，提升效率。',
+        description: '持续上线自己开发的实用小工具，解决实际问题，提升效率。',
         icon: 'tabler:device-desktop-code',
       },
       {
         title: '快速加载',
-        description:
-          '采用现代静态网站架构，页面加载极速，带来流畅的浏览体验。',
+        description: '采用现代静态网站架构，页面加载极速，带来流畅的浏览体验。',
         icon: 'tabler:rocket',
       },
       {
         title: '搜索引擎优化',
-        description:
-          '内置 SEO 优化，让你的内容更容易被搜索引擎收录，触达更多读者。',
+        description: '内置 SEO 优化，让你的内容更容易被搜索引擎收录，触达更多读者。',
         icon: 'tabler:arrows-right-left',
       },
       {
         title: '持续迭代更新',
-        description:
-          '网站功能会持续扩展，后续将接入量化策略、期权数据等进阶功能。',
+        description: '网站功能会持续扩展，后续将接入量化策略、期权数据等进阶功能。',
         icon: 'tabler:bulb',
       },
     ]}
   />
-
-  <!-- Content Widget **************** -->
 
   <Content
     isReversed
@@ -108,18 +94,15 @@ const metadata = {
     items={[
       {
         title: '基于 Astro 5.0 构建',
-        description:
-          '采用新一代静态站点生成器，性能卓越，开发体验友好。',
+        description: '采用新一代静态站点生成器，性能卓越，开发体验友好。',
       },
       {
         title: '使用 Tailwind CSS 设计',
-        description:
-          '界面简洁美观，响应式布局，手机电脑均可完美展示。',
+        description: '界面简洁美观，响应式布局，手机电脑均可完美展示。',
       },
       {
         title: '跨浏览器兼容',
-        description:
-          '无论你使用 Chrome、Safari 还是手机浏览器，都能获得一致的浏览体验。',
+        description: '无论你使用 Chrome、Safari 还是手机浏览器，都能获得一致的浏览体验。',
       },
     ]}
     image={{
@@ -137,8 +120,6 @@ const metadata = {
     </Fragment>
   </Content>
 
-  <!-- Content Widget **************** -->
-
   <Content
     isAfterContent
     items={[
@@ -148,18 +129,15 @@ const metadata = {
       },
       {
         title: '多种页面布局',
-        description:
-          '提供多样化的页面结构选择，让内容呈现更有层次感，提升用户体验。',
+        description: '提供多样化的页面结构选择，让内容呈现更有层次感，提升用户体验。',
       },
       {
         title: '完全响应式设计',
-        description:
-          '自动适配手机、平板、电脑等各种屏幕尺寸，随时随地畅读无阻。',
+        description: '自动适配手机、平板、电脑等各种屏幕尺寸，随时随地畅读无阻。',
       },
       {
         title: '多媒体内容支持',
-        description:
-          '轻松嵌入图片、视频等多媒体内容，让文章表达更生动丰富。',
+        description: '轻松嵌入图片、视频等多媒体内容，让文章表达更生动丰富。',
       },
     ]}
     image={{
@@ -174,65 +152,22 @@ const metadata = {
     </Fragment>
   </Content>
 
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent
-    items={[
-      {
-        title: '提升用户参与感',
-        description:
-          '通过清晰的导航结构与视觉设计，让访客愿意停留、愿意探索。',
-      },
-      {
-        title: '持续优化迭代',
-        description:
-          '跟随最新技术趋势不断更新，确保网站始终保持最佳状态。',
-      },
-      {
-        title: '节省时间与精力',
-        description:
-          '无需从零开始，站在成熟模板的基础上快速搭建，把时间花在内容创作上。',
-      },
-      {
-        title: '社区支持',
-        description: '背靠活跃的开源社区，遇到问题随时可以找到解决方案，不用独自摸索。',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1611462985358-60d3498e0364?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: '成长与成功',
-    }}
-  >
-    <Fragment slot="content">为成长而设计，为成功而打造。</Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Steps Widget ****************** -->
-
   <Steps
     title="三步搭建你的个人网站，快速上线"
     items={[
       {
         title: '第一步：<span class="font-medium">获取模板</span>',
-        description:
-          '前往 GitHub，Fork 本项目或点击「使用此模板」。几次点击，基础框架已就位，你的数字空间正式开工。',
+        description: '前往 GitHub，Fork 本项目或点击「使用此模板」。几次点击，基础框架已就位。',
         icon: 'tabler:package',
       },
       {
         title: '第二步：<span class="font-medium">填充内容</span>',
-        description:
-          '把你的文章、笔记、工具链接一一填入。内容是网站的灵魂，让它讲出你的故事。',
+        description: '把你的文章、笔记、工具链接一一填入。内容是网站的灵魂。',
         icon: 'tabler:letter-case',
       },
       {
         title: '第三步：<span class="font-medium">定制样式</span>',
-        description:
-          '调整颜色、字体与布局，直到它看起来就像你想要的样子。细节决定体验。',
+        description: '调整颜色、字体与布局，直到它看起来就像你想要的样子。',
         icon: 'tabler:paint',
       },
       {
@@ -246,58 +181,17 @@ const metadata = {
     }}
   />
 
-  <!-- Features2 Widget ************** -->
-
   <Features2
     title="常用页面组件"
     subtitle="基于 Tailwind CSS 构建的高频组件，覆盖网站建设的各类场景需求"
     tagline="组件库"
     items={[
-      {
-        title: '顶部导航',
-        description: '没有导航的网站就像没有路标的城市，让用户迷路。导航是一切的起点。',
-        icon: 'flat-color-icons:template',
-      },
-      {
-        title: '首屏 Hero',
-        description: '网站的第一印象，决定用户是否愿意继续探索。抓住眼球，留住访客。',
-        icon: 'flat-color-icons:gallery',
-      },
-      {
-        title: '功能特性展示',
-        description: '把你的核心优势清晰呈现，让用户一眼看懂你能提供什么价值。',
-        icon: 'flat-color-icons:approval',
-      },
-      {
-        title: '内容区块',
-        description: '网站的主体骨架，承载文章、介绍、说明等核心信息，内容为王。',
-        icon: 'flat-color-icons:document',
-      },
-      {
-        title: '行动号召按钮',
-        description: '引导用户采取下一步行动，无论是订阅、下载还是联系，都靠它来推动。',
-        icon: 'flat-color-icons:advertising',
-      },
-      {
-        title: '定价方案',
-        description: '清晰展示你的产品或服务方案，帮助用户快速做出选择。',
-        icon: 'flat-color-icons:currency-exchange',
-      },
-      {
-        title: '用户评价',
-        description: '真实的用户反馈是最好的背书，让访客看到别人的使用体验与认可。',
-        icon: 'flat-color-icons:voice-presentation',
-      },
-      {
-        title: '联系方式',
-        description: '像一个永不关门的数字信箱，随时接收留言、问题与合作意向。',
-        icon: 'flat-color-icons:business-contact',
-      },
-      {
-        title: '页面底部',
-        description: '页脚是网站的收尾，放上版权信息、友情链接与备案号，细节决定专业度。',
-        icon: 'flat-color-icons:database',
-      },
+      { title: '顶部导航', description: '导航是一切的起点。', icon: 'flat-color-icons:template' },
+      { title: '首屏 Hero', description: '抓住眼球，留住访客。', icon: 'flat-color-icons:gallery' },
+      { title: '功能展示', description: '清晰呈现核心优势。', icon: 'flat-color-icons:approval' },
+      { title: '内容区块', description: '内容为王。', icon: 'flat-color-icons:document' },
+      { title: '行动按钮', description: '引导用户下一步行动。', icon: 'flat-color-icons:advertising' },
+      { title: '联系方式', description: '数字信箱。', icon: 'flat-color-icons:business-contact' },
     ]}
   >
     <Fragment slot="bg">
@@ -305,58 +199,27 @@ const metadata = {
     </Fragment>
   </Features2>
 
-  <!-- BlogLatestPosts Widget ******* -->
-
   <BlogLatestPosts
     title="最新文章"
-    information={`这里收录了我的最新原创文章与精选笔记。
-                      每一篇文章都是一次思考的沉淀，希望对你有所启发。
-                      持续更新中，欢迎常来看看。
-                `}
+    information="这里收录了我的最新原创文章与精选笔记。持续更新中，欢迎常来看看。"
   />
-
-  <!-- FAQs Widget ******************* -->
 
   <FAQs
     title="常见问题"
-    subtitle="整理了一些大家最常问到的问题，帮你快速了解本站的功能与使用方式。"
+    subtitle="整理了一些大家最常问到的问题。"
     tagline="FAQ"
     classes={{ container: 'max-w-6xl' }}
     items={[
       {
         title: '这个网站主要提供什么内容？',
-        description:
-          '本站主要包含四类内容：个人原创文章与笔记、精选转载文章、实用工具导航，以及自己开发的小工具。后续还会接入量化策略与期权数据展示功能。',
-      },
-      {
-        title: '文章可以转载吗？',
-        description:
-          '原创内容请注明出处后转载，转载文章版权归原作者所有，本站仅做收录与整理，如有侵权请联系删除。',
-      },
-      {
-        title: '网站会持续更新吗？',
-        description:
-          '是的，本站会持续更新文章与工具内容，同时也会不断优化网站功能与用户体验。建议收藏本站，方便随时回访。',
+        description: '本站主要包含个人原创文章、精选转载、工具导航，以及量化期权工具。',
       },
       {
         title: '如何联系站长？',
-        description:
-          '可以通过页面底部的联系方式与我取得联系，欢迎交流想法、提出建议或探讨合作。',
-      },
-      {
-        title: '网站支持手机浏览吗？',
-        description:
-          '完全支持。本站采用响应式设计，无论是手机、平板还是电脑，都能获得良好的阅读体验。',
-      },
-      {
-        title: '后续会有哪些新功能？',
-        description:
-          '计划中的功能包括：期权 API 数据对接、实时账户余额展示、量化策略运行状态监控等。敬请期待。',
+        description: '可以通过页面底部的联系方式与我取得联系。',
       },
     ]}
   />
-
-  <!-- Stats Widget ****************** -->
 
   <Stats
     stats={[
@@ -366,8 +229,6 @@ const metadata = {
       { title: '月均访客', amount: '持续增长' },
     ]}
   />
-
-  <!-- CallToAction Widget *********** -->
 
   <CallToAction
     actions={[
@@ -381,11 +242,10 @@ const metadata = {
     ]}
   >
     <Fragment slot="title">
-      内容&nbsp;+&nbsp;<br class="block sm:hidden" /><span class="sm:whitespace-nowrap">工具 · 一站搞定</span>
+      内容&nbsp;+&nbsp;工具 · 一站搞定
     </Fragment>
 
     <Fragment slot="subtitle">
-      无论你是来读文章、找工具，还是学习建站，这里都有你想要的。<br class="hidden md:inline" />
       收藏本站，下次直接来。
     </Fragment>
   </CallToAction>
